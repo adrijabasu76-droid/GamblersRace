@@ -289,8 +289,8 @@
             let pathNeighborCount = 0;
             for (const move of neighborDirections) {
                 const neighbor = { row: candidate.row + move.dr, col: candidate.col + move.dc };
-                const neighborKey = ${neighbor.row},${neighbor.col};
-                const currentKey = ${current.row},${current.col};
+                const neighborKey = `${neighbor.row},${neighbor.col}`;
+                const currentKey = `${current.row},${current.col}`;
                 
                 // If the neighbor is in the visited set and it's not the current tile,
                 // then this would create a branch.
@@ -323,7 +323,7 @@
 
             while (true) {
                 let path = [{ ...START_COORD }];
-                let visited = new Set([${START_COORD.row},${START_COORD.col}]);
+                let visited = new Set([`${START_COORD.row},${START_COORD.col}`]);
                 let current = { ...START_COORD };
 
                 // Loop to build the path until the finish is reached or we get stuck
@@ -334,7 +334,7 @@
 
                     for (const move of shuffledDirections) {
                         const next = { row: current.row + move.dr, col: current.col + move.dc };
-                        const key = ${next.row},${next.col};
+                        const key = `${next.row},${next.col}`;
 
                         // Check if the next tile is within board bounds and has not been visited
                         // The key new check is the call to isLinearMove()
@@ -388,8 +388,8 @@
 
         function renderBoard() {
             boardDiv.innerHTML = '';
-            boardDiv.style.gridTemplateRows = repeat(${BOARD_ROWS}, 1fr);
-            boardDiv.style.gridTemplateColumns = repeat(${BOARD_COLS}, 1fr);
+            boardDiv.style.gridTemplateRows = `repeat(${BOARD_ROWS}, 1fr)`;
+            boardDiv.style.gridTemplateColumns = `repeat(${BOARD_COLS}, 1fr)`;
 
             for (let r = 0; r < BOARD_ROWS; r++) {
                 for (let c = 0; c < BOARD_COLS; c++) {
@@ -429,10 +429,10 @@
                 const tileIndex = player.position;
                 if (tileIndex >= 0 && tileIndex < boardPath.length) {
                     const tileCoords = boardPath[tileIndex];
-                    const tileElement = boardDiv.querySelector([data-row="${tileCoords.row}"][data-col="${tileCoords.col}"]);
+                    const tileElement = boardDiv.querySelector(`[data-row="${tileCoords.row}"][data-col="${tileCoords.col}"]`);
                     if (tileElement) {
                         const playerEl = document.createElement('div');
-                        playerEl.classList.add('player', player-${index + 1});
+                        playerEl.classList.add('player', `player-${index + 1}`);
                         playerEl.textContent = index + 1;
                         tileElement.appendChild(playerEl);
                     }
@@ -507,7 +507,7 @@
 
             const player = players[currentPlayerIndex];
             if (player.skipTurn) {
-                showMessage(Player ${player.id}'s turn is skipped!);
+                showMessage(`Player ${player.id}'s turn is skipped!`);
                 player.skipTurn = false;
                 endTurn();
                 return;
@@ -534,12 +534,12 @@
 
                 if (player.position >= boardPath.length - 1) {
                     player.position = boardPath.length - 1;
-                    showMessage(Player ${player.id} has reached the finish line and won!);
+                    showMessage(`Player ${player.id} has reached the finish line and won!`);
                     updateUI();
                     return;
                 }
                 
-                showMessage(Player ${player.id} chose the ${chosenDiceType} die and rolled a ${lastRoll}.);
+                showMessage(`Player ${player.id} chose the ${chosenDiceType} die and rolled a ${lastRoll}.`);
                 
                 // First, render the player on the new tile before showing a potential action card
                 updateUI();
@@ -559,7 +559,7 @@
 
             if (tileValue === '-') {
                 if (player.hasProtection) {
-                    showMessage(Player ${player.id} landed on a negative tile but was protected!);
+                    showMessage(`Player ${player.id} landed on a negative tile but was protected!`);
                     player.hasProtection = false;
                 } else {
                     let moveBack = 0;
@@ -571,7 +571,7 @@
                         moveBack = 8;
                     }
                     player.position = Math.max(0, player.position - moveBack);
-                    showMessage(Player ${player.id} landed on a penalty tile and moved back ${moveBack} steps!);
+                    showMessage(`Player ${player.id} landed on a penalty tile and moved back ${moveBack} steps!`);
                 }
                 // End the turn immediately after a negative tile effect
                 endTurn();
@@ -602,34 +602,34 @@
             switch(cardText) {
                 case "Skip opponent's turn":
                     opponent.skipTurn = true;
-                    showMessage(Action Card: ${cardText}! Player ${opponent.id}'s turn will be skipped.);
+                    showMessage(`Action Card: ${cardText}! Player ${opponent.id}'s turn will be skipped.`);
                     break;
                 case "Move forward 3 additional spaces":
                     player.position += 3;
-                    showMessage(Action Card: ${cardText}! You moved forward 3 additional spaces.);
+                    showMessage(`Action Card: ${cardText}! You moved forward 3 additional spaces.`);
                     break;
                 case "Your opponent is one step behind you":
                     opponent.position = Math.max(0, player.position - 1);
-                    showMessage(Action Card: ${cardText}! Player ${opponent.id} is now one step behind you.);
+                    showMessage(`Action Card: ${cardText}! Player ${opponent.id} is now one step behind you.`);
                     break;
                 case "Move forward one space":
                     player.position += 1;
-                    showMessage(Action Card: ${cardText}! You moved forward one space.);
+                    showMessage(`Action Card: ${cardText}! You moved forward one space.`);
                     break;
                 case "Swap position with ur opponent":
                     const tempPos = player.position;
                     player.position = opponent.position;
                     opponent.position = tempPos;
-                    showMessage(Action Card: ${cardText}! You swapped positions with your opponent.);
+                    showMessage(`Action Card: ${cardText}! You swapped positions with your opponent.`);
                     break;
                 case "Odd or even: if odd Move backwards if even Move forward":
                     const oddEvenRoll = rollYellowDice();
                     if (oddEvenRoll % 2 === 0) {
                         player.position += oddEvenRoll;
-                        showMessage(Action Card: ${cardText}! Rolled an even ${oddEvenRoll}! Move forward ${oddEvenRoll} spaces.);
+                        showMessage(`Action Card: ${cardText}! Rolled an even ${oddEvenRoll}! Move forward ${oddEvenRoll} spaces.`);
                     } else {
                         player.position = Math.max(0, player.position - oddEvenRoll);
-                        showMessage(Action Card: ${cardText}! Rolled an odd ${oddEvenRoll}! Move backward ${oddEvenRoll} spaces.);
+                        showMessage(`Action Card: ${cardText}! Rolled an odd ${oddEvenRoll}! Move backward ${oddEvenRoll} spaces.`);
                     }
                     break;
                 case "Double dice: roll Two dice at once and add both numbers rolled.":
@@ -637,19 +637,19 @@
                     const roll2 = rollYellowDice();
                     const totalRoll = roll1 + roll2;
                     player.position += totalRoll;
-                    showMessage(Action Card: ${cardText}! Rolled a ${roll1} and a ${roll2}! Move forward ${totalRoll} spaces.);
+                    showMessage(`Action Card: ${cardText}! Rolled a ${roll1} and a ${roll2}! Move forward ${totalRoll} spaces.`);
                     break;
                 case "Trip: Move back the same number you rolled.":
                     player.position = Math.max(0, player.position - rolledNumber);
-                    showMessage(Action Card: ${cardText}! You moved back ${rolledNumber} spaces.);
+                    showMessage(`Action Card: ${cardText}! You moved back ${rolledNumber} spaces.`);
                     break;
                 case "Weak roll: can only roll the Green die next turn":
                     opponent.canOnlyUseGreen = true;
-                    showMessage(Action Card: ${cardText}! Player ${opponent.id} can only use the green die next turn.);
+                    showMessage(`Action Card: ${cardText}! Player ${opponent.id} can only use the green die next turn.`);
                     break;
                 case "Risk Roll: can only roll the red die next turn":
                     opponent.canOnlyUseRed = true;
-                    showMessage(Action Card: ${cardText}! Player ${opponent.id} can only use the red die next turn.);
+                    showMessage(`Action Card: ${cardText}! Player ${opponent.id} can only use the red die next turn.`);
                     break;
                 case "6 or nothing: have to roll a 6 to proceed. Red die is unusable.":
                     let foundSix = false;
@@ -662,14 +662,14 @@
                         }
                     }
                     if (foundSix) {
-                        showMessage(Action Card: ${cardText}! You rolled a 6 and moved forward 6 spaces.);
+                        showMessage(`Action Card: ${cardText}! You rolled a 6 and moved forward 6 spaces.`);
                     } else {
-                        showMessage(Action Card: ${cardText}! You failed to roll a 6. No movement this turn.);
+                        showMessage(`Action Card: ${cardText}! You failed to roll a 6. No movement this turn.`);
                     }
                     break;
                 case "Protection: roll the dice and if it lands on Negative tile, ignore the effect.":
                     player.hasProtection = true;
-                    showMessage(Action Card: ${cardText}! You are now protected from negative tiles for this turn.);
+                    showMessage(`Action Card: ${cardText}! You are now protected from negative tiles for this turn.`);
                     break;
             }
             
@@ -709,7 +709,7 @@
             rollDiceBtn.disabled = true;
             enableDiceChoices();
             isChoosingDice = true;
-            showMessage(Player ${players[currentPlayerIndex].id}, choose a die to move!);
+            showMessage(`Player ${players[currentPlayerIndex].id}, choose a die to move!`);
         });
 
         greenDiceDiv.addEventListener('click', () => handleDiceChoice('green', greenDiceDiv));
@@ -731,3 +731,5 @@
     </script>
 </body>
 </html>
+
+
